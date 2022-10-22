@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/blog/layout :: head">
+</head>
+<body>
+<h3>blog</h3>
+<p>
+    <a th:href="@{/blog/create}">
+        Add new blog
+    </a>
+</p>
+<form action="/blog/search" method="get">
+    <tr>
+        <td>search by name</td>
+        <input type="text" name="kq">
+        <button type="submit">commit</button>
+    </tr>
+</form>
+<table id="customers">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>content</th>
+        <th>note</th>
+        <th>Category</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="blog : ${blogList}">
+        <td th:text="${blog.id}"></td>
+        <td th:text="${blog.name}"></td>
+        <td th:text="${blog.content}"></td>
+        <td th:text="${blog.note}"></td>
+        <td th:text="${blog.category.name}"></td>
+        <td><a th:href="@{/blog/{id}/edit(id=${blog.id})}">edit</a></td>
+        <td>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                    th:attr="onclick=|getIdToDelete('${blog.id}','${blog.name}')|"
+            >
+                DELETE
+            </button>
+<!--            -->
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <form action="#" th:action="@{/blog/{id}/delete(id=${blog.id})}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h2 class="modal-title text-danger" id="exampleModalLabel">Blog</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body ">
+                                <b>ID Blog :</b>
+                                <input type="text" readonly name="id" id="idDelete" class="form-control"><br>
+                                <b>Name Blog :</b>
+                                <input type="text" readonly name="name" id="nameDelete" class="form-control"><br>
+                                <h3 class="text-danger">Are you sure want delete </h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" value="delete">Yes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </td>
+        <td><a th:href="@{/blog/{id}/view(id=${blog.id})}">view</a></td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    // <%--    thêm value cho thẻ input--%>
+    function getIdToDelete(id, name) {
+
+        document.getElementById("idDelete").value = id;
+        document.getElementById("nameDelete").value = name;
+    }
+</script>
+<footer th:replace="/blog/layout :: footer"></footer>
+</body>
+</html>
