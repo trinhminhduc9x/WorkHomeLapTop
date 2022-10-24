@@ -5,12 +5,17 @@ import com.spring_boot.model.Category;
 import com.spring_boot.service.ICategoryService;
 import com.spring_boot.service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -24,11 +29,23 @@ public class BlogController {
     private ICategoryService categoryService;
 
 
-    @GetMapping("/list")
-    public String showStudentList(Model model) {
-        model.addAttribute("blogList", blogService.findAll());
 
-        return "/blog/index";
+
+    @GetMapping("/list")
+    public String goPage(Model model, @PageableDefault(6) Pageable pageable,
+                         @RequestParam Optional<String> name,
+                         @RequestParam(required = false, defaultValue = "") String note) {
+        for (Sort.Order order: pageable.getSort()) {
+            model.addAttribute("sortValue", order.getProperty());
+        }
+        String keyName = name.orElse("");
+        Page<Blog> blogPage = blogService.findAll(pageable,keyName, note);
+        List<Category> categoryList = categoryService.findAll();
+        model.addAttribute("categoryList",categoryList);
+        model.addAttribute("blogPage", blogPage);
+        model.addAttribute("name", keyName);
+        model.addAttribute("note", note);
+        return "blog/index";
     }
 
     @GetMapping("/create")
