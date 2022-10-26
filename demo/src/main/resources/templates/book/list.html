@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout :: head">
+</head>
+<body>
+<div th:replace="~{/layout::navbar}"></div>
+<h3 style="text-align: center">BOOK</h3>
+<p>
+    <a th:href="@{/book/create}">
+        Add new BOOK
+    </a>
+</p>
+<!--<form action="/blog/list" method="get">-->
+<!--    <tr>-->
+<!--        <input class="form-control me-2 w-25 " type="text" placeholder="Name"-->
+<!--               name="name" aria-label="Search" th:value="${name}">-->
+<!--        <button class="btn btn-success" type="submit">Search</button>-->
+<!--    </tr>-->
+<!--</form>-->
+<!--<a th:href="@{/templates/book/list(sort='name', name=${name})}" class="btn btn-success" type="submit">Sort By-->
+<!--    Name</a>-->
+<table id="customers">
+    <thead>
+    <tr>
+<!--        <th>No.</th>-->
+
+
+        <th>ID</th>
+        <th>Name</th>
+        <th>amount</th>
+        <th>pay</th>
+        <th>order</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book,loop : ${bookPage}">
+
+<!--        <td th:text="${loop.count + bookPage.size * bookPage.number}"></td>-->
+
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.name}"></td>
+        <td th:text="${book.amount}"></td>
+        <td th:text="${book.ordersssAndPaysss.getOrderasc()}"></td>
+        <td th:text="${book.ordersssAndPaysss.getPayasc()}"></td>
+
+        <!-- EDIT -->
+        <td><a th:href="@{/book/{id}/oder(id=${book.id})}">
+
+                <buton class="btn btn-success">ORDER</buton>
+        </a></td>
+
+        <td>
+            <!-- DELETE -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal"
+<!--                    th:attr="onclick=|getIdToDelete('${book.id}','${book.name}')|"-->
+            >
+                DELETE
+            </button>
+        </td>
+        <td>
+            <!-- VIEW -->
+            <button th:attr="onclick=|infoToDetail('${book.id}','${book.name}','${book.amount}')|"
+                    class="btn btn-warning"
+                    type="button" data-bs-toggle="modal" data-bs-target="#detailModal">
+                VIEW
+            </button>
+        </td>
+    </tr>
+
+
+    <!-- Modal Delete-->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="/blog/delete" method="get">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-danger" id="exampleModalLabel">Blog</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body ">
+                        <b>ID Blog :</b>
+                        <input type="text" readonly name="id" id="idDelete" class="form-control"><br>
+                        <b>Name Blog :</b>
+                        <input type="text" readonly name="name" id="nameDelete" class="form-control"><br>
+                        <h3 class="text-danger">Are you sure want delete </h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" value="delete">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Modal view-->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="exampleModalLabel1"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-danger" id="exampleModalLabel1">Blog</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body ">
+                        <b>ID  :</b>
+                        <input type="text" readonly name="id" id="detailId" class="form-control"><br>
+                        <b>Name  :</b>
+                        <input type="text" readonly name="name" id="detailName" class="form-control"><br>
+                        <b>Content  :</b>
+                        <input type="text" readonly name="content" id="detailContent" class="form-control"><br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    </tbody>
+</table>
+
+<!-- Phan Trang -->
+<!--<div class="d-flex justify-content-end ">-->
+<!--    <ul class="pagination">-->
+<!--        <li class="page-item disabled" th:if="${bookPage.number == 0}">-->
+<!--            <a class="page-link" href="">Previous</a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:if="${bookPage.number > 0}">-->
+<!--            <a class="page-link"-->
+<!--               th:href="@{/templates/book/list(page=${bookPage.number - 1}, sort=${sortValue}, name=${name})}">Previous</a>-->
+<!--        </li>-->
+<!--        <li class="page-item disabled">-->
+<!--            <a class="page-link" href=""><span th:text="${bookPage.number + 1}"></span> / <span-->
+<!--                    th:text="${bookPage.totalPages}"></span></a>-->
+<!--        </li>-->
+<!--        <li class="page-item disabled" th:if="${bookPage.number >= bookPage.totalPages - 1}">-->
+<!--            <a class="page-link" href="">Next</a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:if="${bookPage.number < bookPage.totalPages - 1}">-->
+<!--            <a class="page-link"-->
+<!--               th:href="@{/templates/book/list(page=${bookPage.number + 1}, sort=${sortValue}, name=${name})}">Next</a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+
+<script>
+    // <%--    thêm value cho thẻ delete--%>
+    function getIdToDelete(id, name) {
+
+        document.getElementById("idDelete").value = id;
+        document.getElementById("nameDelete").value = name;
+    }
+
+    // <%--    thêm value cho thẻ view--%>
+    function infoToDetail(id, name, content) {
+        document.getElementById("detailId").value = id;
+        document.getElementById("detailName").value = name;
+        document.getElementById("detailContent").value = content;
+    }
+</script>
+<footer th:replace="/layout :: footer"></footer>
+</body>
+</html>
