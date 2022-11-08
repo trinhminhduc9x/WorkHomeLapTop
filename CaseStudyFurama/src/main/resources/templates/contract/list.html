@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+<head th:replace="/layout :: head">
+</head>
+<body>
+<div th:replace="~{/layout::navbar}"></div>
+<h3 style="text-align: center">contract</h3>
+
+<p>
+    <a th:href="@{/contract/create}">
+        <input class="m-3 btn btn-danger" type="submit" value=" Add ">
+    </a>
+</p>
+
+<form action="/contract/list" method="get">
+    <tr>
+        <input class="form-control me-2 w-25 " type="text" placeholder="Name"
+               name="name" aria-label="Search" th:value="${name}">
+        <button class="btn btn-success" type="submit">Search</button>
+    </tr>
+</form>
+
+<a th:href="@{/contract/list(sort='name', name=${name})}" class="btn btn-success" type="submit">
+    Sort By Name</a>
+
+<table id="tableMinhDuc">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>startDate</th>
+        <th>endDate</th>
+        <th>deposit</th>
+        <th>customer</th>
+        <th>employee</th>
+        <th>facility</th>
+        <th>Edit</th>
+        <th>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                XOA
+            </button>
+        </th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contract,loop : ${contractPage}">
+        <td th:text="${contract.id}"></td>
+        <td th:text="${contract.startDate}"></td>
+        <td th:text="${contract.endDate}"></td>
+        <td th:text="${contract.deposit}"></td>
+        <td th:text="${contract.customer.name}"></td>
+        <td th:text="${contract.employee.name}"></td>
+        <td th:text="${contract.facility.name}"></td>
+
+        <!-- EDIT -->
+        <td>
+            <a th:href="@{/contract/{id}/viewContractDetail(id=${contract.id})}">
+                <buton class="btn btn-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                    </svg>
+                </buton>
+            </a>
+        </td>
+        <!-- DELETE -->
+
+        <td>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                       th:attr="onclick=|getIdToDelete('${contract.id}')|">
+                <label class="form-check-label" for="flexCheckDefault">
+                    DELETE
+                </label>
+            </div>
+
+        </td>
+
+        <!-- VIEW -->
+        <td>
+            <button type="button" th:attr="onclick=|infoToModal('${contract.id}')|" class="btn btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-search"
+                     viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+        </td>
+    </tr>
+    </tbody>
+
+
+</table>
+
+<!-- Modal Delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/contract/delete" method="get">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title text-danger" id="exampleModalLabel">customer</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+                    <b>ID :</b>
+                    <input type="ar" readonly name="arr" id="arr" class="form-control"><br>>
+                    <h3 class="text-danger">Are you sure want delete </h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" value="delete">Yes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal VIEW-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-danger text-center" id="exampleModalLabel">Attach Facility List</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <th>No.</th>
+                        <th>Attach Facility Name</th>
+                        <th>Cost</th>
+                        <th>Unit</th>
+                        <th>Status</th>
+                    </tr>
+                    <tbody id="table">
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Phan Trang -->
+<div class="d-flex justify-content-end ">
+    <ul class="pagination">
+        <li class="page-item disabled" th:if="${contractPage.number == 0}">
+            <a class="page-link" href="">Previous</a>
+        </li>
+        <li class="page-item" th:if="${contractPage.number > 0}">
+            <a class="page-link"
+               th:href="@{/contract/list(page=${contractPage.number - 1}, sort=${sortValue}, name=${name})}">Previous</a>
+        </li>
+        <li class="page-item disabled">
+            <a class="page-link" href=""><span th:text="${contractPage.number + 1}"></span> / <span
+                    th:text="${contractPage.totalPages}"></span></a>
+        </li>
+        <li class="page-item disabled" th:if="${contractPage.number >= contractPage.totalPages - 1}">
+            <a class="page-link" href="">Next</a>
+        </li>
+        <li class="page-item" th:if="${contractPage.number < contractPage.totalPages - 1}">
+            <a class="page-link"
+               th:href="@{/contract/list(page=${contractPage.number + 1}, sort=${sortValue}, name=${name})}">Next</a>
+        </li>
+    </ul>
+</div>
+
+<script>
+
+    let arr = new Array();
+
+    console.log(arr);
+
+    // <%--    thêm value cho thẻ delete--%>
+    function getIdToDelete(id) {
+        arr.push(id)
+        document.getElementById("arr").value = arr;
+
+    }
+
+    function infoToModal(id) {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8080/contractdetaildto/viewContractDetail?id=" + id,
+            success: function (attachFacilityList) {
+                let htmlStr = '';
+                for (let i = 0; i < attachFacilityList.length; i++) {
+
+                    htmlStr += `<tr>
+                        <td>${i + 1}</td>
+                       <td>${attachFacilityList[i].name}</td>
+                        <td>${attachFacilityList[i].display}</td>
+                        <td>${attachFacilityList[i].unit}</td>
+                        <td>${attachFacilityList[i].status}</td>
+                    </tr>`;
+                }
+                $("#table").html(htmlStr);
+            },
+            error: function (resultError) {
+            }
+        });
+    }
+
+    function idContract(id) {
+        $('#idContract').val(id);
+    }
+</script>
+
+<footer th:replace="/layout :: footer"></footer>
+</body>
