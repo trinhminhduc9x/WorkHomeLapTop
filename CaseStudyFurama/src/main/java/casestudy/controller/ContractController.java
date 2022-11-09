@@ -82,9 +82,6 @@ public class ContractController {
         return "/contract/create";
     }
 
-
-
-
     @PostMapping("/save")
     public String save(@ModelAttribute Contract contract) {
 
@@ -120,15 +117,12 @@ public class ContractController {
         for (Integer i=1;i<=arr.length;i++){
             contractService.remove(arr[i]);
         }
-//        contractService.remove(id);
         return "redirect:/contract/list";
     }
-
 
     @ExceptionHandler(value = Exception.class)
     public String error() {
         return "/error";
     }
-
 
 }
