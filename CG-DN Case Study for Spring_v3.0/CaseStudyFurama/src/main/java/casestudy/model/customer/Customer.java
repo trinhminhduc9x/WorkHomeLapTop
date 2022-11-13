@@ -1,8 +1,12 @@
 package casestudy.model.customer;
 
+import casestudy.model.contract.Contract;
+import casestudy.model.contract.ContractDetail;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "customer")
@@ -16,6 +20,18 @@ public class Customer {
     @JsonBackReference
     private CustomerType customerType;
 
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private Set<Contract> contracts;
+
+    public Set<Contract> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(Set<Contract> contracts) {
+        this.contracts = contracts;
+    }
+
     private String name;
     private String dateOfBirth;
     private String gender;
@@ -24,9 +40,17 @@ public class Customer {
     private String email;
     private String address;
 
-    private String id_delete;
 
+    private int deleteStatus;
     public Customer() {
+    }
+
+    public int getDeleteStatus() {
+        return deleteStatus;
+    }
+
+    public void setDeleteStatus(int deleteStatus) {
+        this.deleteStatus = deleteStatus;
     }
 
     public Customer(Integer id, CustomerType customerType, String name, String dateOfBirth, String gender, String idCard, String phoneNumber, String email, String address, String id_delete) {
@@ -39,7 +63,6 @@ public class Customer {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
-        this.id_delete = id_delete;
     }
 
     public Integer getId() {
@@ -114,11 +137,5 @@ public class Customer {
         this.address = address;
     }
 
-    public String getId_delete() {
-        return id_delete;
-    }
 
-    public void setId_delete(String id_delete) {
-        this.id_delete = id_delete;
-    }
 }

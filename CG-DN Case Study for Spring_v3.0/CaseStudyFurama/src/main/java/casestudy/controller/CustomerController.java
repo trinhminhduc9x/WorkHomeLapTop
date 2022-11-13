@@ -107,7 +107,7 @@ public class CustomerController {
 
     @GetMapping("/delete")
     public String delete(@RequestParam(name = "id") Integer id) {
-        customerService.removeNew(id);
+        customerService.remove(id);
         return "redirect:/customer/list";
     }
 

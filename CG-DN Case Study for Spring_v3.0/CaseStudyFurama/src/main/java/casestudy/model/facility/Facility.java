@@ -1,6 +1,10 @@
 package casestudy.model.facility;
 
+import casestudy.model.contract.Contract;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "facility")
@@ -34,6 +38,18 @@ public class Facility {
     @ManyToOne
     @JoinColumn(name = "facility_type", referencedColumnName = "id")
     private FacilityType facilityType;
+
+    @OneToMany(mappedBy = "facility",cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private Set<Contract> contracts;
+
+    public Set<Contract> getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(Set<Contract> contracts) {
+        this.contracts = contracts;
+    }
 
     public Facility() {
     }

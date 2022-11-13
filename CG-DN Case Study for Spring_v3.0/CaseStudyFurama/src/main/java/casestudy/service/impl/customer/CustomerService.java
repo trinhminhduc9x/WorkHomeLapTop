@@ -43,26 +43,13 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void remove(Integer id) {
-        repository.deleteById_delete(id);
+        repository.deleteLogical(id);
     }
 
-    public void removeNew(Integer id) {
-        repository.deleteById(id);
-    }
-
-    @Override
-    public Page<Customer> findPageNameEmailCustomerType(Pageable pageable, String name, String email, String CustomerType) {
-        return this.repository.findAllByNameAndEmailAndCustomerType(pageable,"%"+ name + "%","%"+ email + "%","%"+ CustomerType + "%");
-    }
-
-    @Override
-    public Page<Customer> findPageNameEmail(Pageable pageable, String name, String email) {
-        return this.repository.findAllByNameAndEmail(pageable,"%"+ name + "%","%"+ email + "%");
-    }
 
     @Override
     public Page<Customer> findPageNameAll(Pageable pageable, String name) {
-        return this.repository.findAllByName(pageable,"%"+ name + "%");
+        return null;
     }
 
     @Override

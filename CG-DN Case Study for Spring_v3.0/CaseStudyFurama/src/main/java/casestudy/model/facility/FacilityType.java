@@ -14,7 +14,7 @@ public class FacilityType {
 
     private String name;
 
-    @OneToMany(mappedBy = "facilityType")
+    @OneToMany(mappedBy = "facilityType",cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Facility> facilitySet;
 

@@ -12,7 +12,7 @@ public class RentType {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    @OneToMany(mappedBy = "rentType")
+    @OneToMany(mappedBy = "rentType",cascade = CascadeType.ALL)
     @JsonBackReference
     private Set<Facility> facilitySet;
 
