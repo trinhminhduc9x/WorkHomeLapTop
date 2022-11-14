@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/my-style.css">
+</head>
+<body>
+<div th:replace="layout :: header"></div>
+
+<div class="container">
+    <div class="row">
+
+                <div class="col-md-3">
+                    <a href="/thanhVien/create" class="btn btn-success">Add new customer</a>
+                </div>
+
+
+        <div class="col-md-3"></div>
+        <div class="col-md-6 d-flex justify-content-end">
+            <div>
+                <div class="container-fluid">
+                    <form action="/thanhVien/list" method="get" class="d-flex">
+                        <tr>
+                            <input class="form-control me-2 w-25 " type="text" placeholder="Name"
+                                   name="name" aria-label="Search" th:value="${keyName}">
+                        </tr>
+                        <tr>
+                            <select name="so_ho_khau" >
+                                <option th:if="soHoKhauName!=''" th:text="${soHoKhauName}"></option>
+                                <option value="">Choose Something</option>
+                                <option name="" th:each="p : ${soHoKhauList}"
+                                        th:value="${p.id}"
+                                        th:text="${p.name}"></option>
+                            </select>
+                        </tr>
+                        <tr>
+                            <select name="kieu_thanh_vien" >
+                                <option th:if="thanhVienName!=''" th:text="${kieuThanhVienName}"></option>
+                                <option value="">Choose Something</option>
+                                <option name="" th:each="p : ${kieuThanhVienList}"
+                                        th:value="${p.id}"
+                                        th:text="${p.name}"></option>
+                            </select>
+                        </tr>
+                        <button class="btn btn-outline-success btn-light" type="submit"><strong>Search</strong></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-12">
+            <table id="tableCustomer" class="table table-hover table-striped" style="width: 100%">
+                <thead>
+                <tr class="table-dark">
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">birthday</th>
+                    <th scope="col">identifyCard</th>
+                    <th scope="col">TenThanhVien</th>
+                    <th scope="col">TenSoHoKhau</th>
+                    <th scope="col">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                th:attr="onclick=|stringArr()|"> DELETE ALL
+                        </button>
+                    </th>
+                            <th scope="col" style="text-align: center">Edit</th>
+                            <th scope="col" style="text-align: center">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr class="table-light" th:each="thanhVien, loop : ${thanhVienList}">
+                    <th scope="row" th:text="${loop.count}"></th>
+                    <td th:text="${thanhVien.name}"></td>
+                    <td th:text="${thanhVien.birthday}"></td>
+                    <td th:text="${thanhVien.identifyCard}"></td>
+                    <td th:text="${thanhVien.kieuThanhVien.name}"></td>
+                    <td th:text="${thanhVien.soHoKhau.name}"></td>
+
+
+
+                        <!-- DELETE -->
+
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                       th:attr="onclick=|getIdToDelete('${thanhVien.id}')|">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    DELETE
+                                </label>
+                            </div>
+
+                        </td>
+
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button class="btn">
+                                <a th:href="@{/templates/hoKhau/showEdit/{id}(id=${thanhVien.id})}">
+                                    <img src="/img/edit-2.png"
+                                         style="height: 25px;width: auto">
+                                </a>
+                            </button>
+                        </td>
+
+
+                        <td class="btn-delete">
+                            <!-- Button trigger modal -->
+                            <button type="button"
+                                    class="btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteButton"
+                                    th:attr="onclick=|showModalDelete('${thanhVien.id}','${thanhVien.name}')|">
+                                <img src="/img/delete.png"
+                                     style="height: 25px;width: auto">
+                            </button>
+                        </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{/templates/thanhVien/list(page=${thanhVienList.number - 1},name=${keyName},so_ho_khau=${soHoKhauName},kieu_thanh_vien=${kieuThanhVienName})}"
+               th:if="${thanhVienList.hasPrevious()}"
+               aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+            <span th:unless="${thanhVienList.hasPrevious()}">
+                <a class="page-link">&laquo;</a>
+            </span>
+        </li>
+        <li class="btn btn-light">
+            <span th:text="${thanhVienList.number + 1}"></span>
+            <span th:text="${thanhVienList.totalPages}"></span>
+        </li>
+        <li class="page-item">
+            <a class="page-link"
+               th:href="@{/templates/thanhVien/list(page=${thanhVienList.number + 1},name=${keyName},so_ho_khau=${soHoKhauName},kieu_thanh_vien=${kieuThanhVienName})}"
+               th:if="${thanhVienList.hasNext()}"
+               aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+            <span th:unless="${thanhVienList.hasNext()}">
+                <a class="page-link">&raquo;</a>
+            </span>
+        </li>
+    </ul>
+</nav>
+
+<!--modal delete-->
+<div class="modal fade" id="deleteButton" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/thanhVien/remove" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Deleting</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure about that?
+                    Delete <span class="fw-bold text-danger" id="removeCustomerName"></span>?
+                    <input type="hidden" id="removeCustomerId" name="removeCustomerId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">&#10006;</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--call modal notice-->
+<input type="hidden" id="noticeMsgModal" th:value="${msg}">
+<!-- Modal notice -->
+<div class="modal fade" id="noticeMsg" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-header">
+                <h5 class="modal-title">Furama 's notice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <span th:text="${msg}"></span>
+                <img src="https://media0.giphy.com/media/AWIm1O6FjmCtsI2Pru/giphy.gif?cid=790b7611e14412e5147aee187464a8df9dfeea3085950a9a&rid=giphy.gif&ct=s"
+                     style="width: 35px; height: auto"
+                     alt="">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">&#10004;</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Delete All-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/thanhVien/delete" method="get">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title text-danger" id="exampleModalLabelAll"></h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body ">
+                    <input type="hidden" readonly name="stringArr" id="stringArr" class="form-control"><br>
+                    <h3 class="text-danger">Bạn có chắc chắn xóa hay không</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" value="delete">Yes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function showModalDelete(deleteCustomerId, deleteCustomerName) {
+        $('#removeCustomerName').text(deleteCustomerName);
+        $('#removeCustomerId').val(deleteCustomerId);
+    }
+
+    window.onload = function () {
+        let msg = $("#noticeMsgModal").val();
+        if (msg != null && msg !== "") {
+            $(document).ready(function () {
+                $("#noticeMsg").modal("show");
+            });
+        }
+    }
+</script>
+<script>
+
+    let arr = new Array();
+
+    console.log(arr);
+
+    // <%--    chuyen arr qua chuoi--%>
+    function stringArr() {
+        let stringArr = arr.toString();
+        console.log(stringArr);
+        document.getElementById("stringArr").value = stringArr;
+    }
+
+    // <%--    thêm value cho thẻ delete--%>
+    function getIdToDelete(id) {
+        arr.push(id)
+    }
+
+    window.onload = function () {
+        let msg = $("#noticeMsgModal").val();
+        if (msg != null && msg !== "") {
+            $(document).ready(function () {
+                $("#noticeMsg").modal("show");
+            });
+        }
+    }
+</script>
+<div th:replace="layout :: footer"></div>
+
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script src="/js/bootstrap.js"></script>
+</body>
+</html>
