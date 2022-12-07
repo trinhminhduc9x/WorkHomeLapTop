@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface IPeopleHouseHoldService {
     List<PeopleHouseHold> FindListAll();
+    PeopleHouseHold FindById(Integer id);
+
+
 }

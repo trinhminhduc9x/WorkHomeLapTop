@@ -15,4 +15,10 @@ public class PeopleHouseHoldService implements IPeopleHouseHoldService {
     public List<PeopleHouseHold> FindListAll() {
         return repostory.findAll();
     }
+
+    @Override
+    public PeopleHouseHold FindById(Integer id) {
+        return repostory.findById(id).orElse(new PeopleHouseHold());
+    }
+
 }
