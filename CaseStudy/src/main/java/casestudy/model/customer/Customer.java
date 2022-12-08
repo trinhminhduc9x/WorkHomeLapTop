@@ -32,7 +32,7 @@ public class Customer {
 
     private String phoneNumber;
 
-    private String emaile;
+    private String email;
 
     private String address;
 
