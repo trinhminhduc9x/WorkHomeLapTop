@@ -18,4 +18,9 @@ public class CustomerService implements ICustomerService {
     public Page<Customer> fildPageAll(Pageable pageable, String name, String dataOfBirth, String address) {
         return customerRepository.findPageSearchAll(pageable,name,dataOfBirth,address);
     }
+
+    @Override
+    public void save(Customer customer) {
+        customerRepository.save(customer);
+    }
 }
