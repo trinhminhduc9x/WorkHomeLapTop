@@ -3,8 +3,8 @@ package casestudy.controller;
 import casestudy.dto.CustomerDto;
 import casestudy.model.customer.Customer;
 import casestudy.model.customer.CustomerType;
-import casestudy.service.ICustomerService;
-import casestudy.service.ICustomerTypeService;
+import casestudy.service.customer.ICustomerService;
+import casestudy.service.customer.ICustomerTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +29,11 @@ public class customerController {
     @Autowired
     private ICustomerTypeService iCustomerTypeService;
 
+    @ModelAttribute("customerTypes")
+    public List<CustomerType> getListCustomerType() {
+        return iCustomerTypeService.fildListAll();
+    }
+
     @GetMapping("/list")
     public String showPage(Model model,
                            @PageableDefault(size = 6) Pageable pageable,
@@ -43,7 +48,6 @@ public class customerController {
         model.addAttribute("name", name);
         model.addAttribute("dataOfBirth", dataOfBirth);
         model.addAttribute("CustomerTypeID", CustomerTypeID);
-        model.addAttribute("CustomerTypeList", iCustomerTypeService.fildListAll());
         return "customer/list";
     }
 
@@ -51,8 +55,7 @@ public class customerController {
     @GetMapping("/create")
     public String create(Model model) {
 
-        List<CustomerType> customerTypeList = iCustomerTypeService.fildListAll();
-        model.addAttribute("customerTypeList", customerTypeList);
+
         model.addAttribute("customerDto", new CustomerDto());
 
         return "/customer/create";
@@ -62,10 +65,36 @@ public class customerController {
     public String save(@Validated
                        @ModelAttribute("customerDto") CustomerDto customerDto
             , BindingResult bindingResult
-            , RedirectAttributes redirectAttributes) {
+            , RedirectAttributes redirectAttributes,
+                       Model model) {
         new CustomerDto().validate(customerDto, bindingResult);
         if (bindingResult.hasFieldErrors()) {
+
             return "/customer/create";
+        } else {
+            Customer customer = new Customer();
+            BeanUtils.copyProperties(customerDto, customer);
+            iCustomerService.save(customer);
+            redirectAttributes.addFlashAttribute("msg", " Create form " + customer.getName() + " ok ");
+            return "redirect:/customer/create";
+        }
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable int id, Model model) {
+        model.addAttribute("customerDto", iCustomerService.findById(id));
+        return "/customer/update";
+    }
+
+    @PostMapping("/update")
+    public String update(@Validated
+                         @ModelAttribute("customerDto") CustomerDto customerDto
+            , BindingResult bindingResult
+            , RedirectAttributes redirectAttributes
+            , Model model) {
+        new CustomerDto().validate(customerDto, bindingResult);
+        if (bindingResult.hasFieldErrors()) {
+            return "/customer/update";
         } else {
             Customer customer = new Customer();
             BeanUtils.copyProperties(customerDto, customer);
@@ -73,7 +102,12 @@ public class customerController {
             redirectAttributes.addFlashAttribute("msg", " Create form " + customer.getName() + " ok ");
             return "redirect:/customer/list";
         }
+    }
 
-
+    @PostMapping("/delete")
+    public String delete(@RequestParam(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("msg", " Delete form " + iCustomerService.findById(id).getName() + " ok ");
+        iCustomerService.remove(id);
+        return "redirect:/customer/list";
     }
 }
