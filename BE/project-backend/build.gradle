@@ -25,14 +25,15 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+//    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-social-facebook', version: '1.5.22.RELEASE'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation group: 'com.google.api-client', name: 'google-api-client', version: '1.30.9'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-social-facebook', version: '1.5.22.RELEASE'
+//    implementation 'org.springframework.boot:spring-boot-starter-mail'
+//    implementation group: 'com.google.api-client', name: 'google-api-client', version: '1.30.9'
 }
 
 tasks.named('test') {
