@@ -4,7 +4,6 @@ package projectbackend.dto.account;
 public class AccountDto {
     private String accountname;
     private String password;
-
     private boolean isDelete;
 
     public AccountDto() {

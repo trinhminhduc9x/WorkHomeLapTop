@@ -14,11 +14,9 @@ public interface ICustomerDto {
 
     String getAddress();
 
-    String getPhoneNumber();
-
     String getUsername();
 
-    String getCustomerTypeId();
+
 
 }
 

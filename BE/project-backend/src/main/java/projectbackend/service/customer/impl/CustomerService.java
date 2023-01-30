@@ -30,6 +30,11 @@ public class CustomerService implements ICustomerService {
         customerRepository.save(customer);
     }
 
+    @Override
+    public List<Customer> findListAll() {
+        return null;
+    }
+
 
     @Override
     public void saveCustomerByUser(Customer customer) {
