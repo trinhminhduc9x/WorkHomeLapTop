@@ -95,6 +95,7 @@ export class CustomerCreateComponent implements OnInit {
       this.listMailCustomerAndUsernameAccount = list;
       console.log(list);
       // tslint:disable-next-line:no-unused-expression
+      // @ts-ignore
       this.customerForm = this.formBuilder.group(
         {
           idCustomer: new FormControl(''),
@@ -102,8 +103,8 @@ export class CustomerCreateComponent implements OnInit {
             '[a-zA-Z _ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪ' +
             'ễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+')]),
           emailCustomer: new FormControl('', [Validators.required,
-            Validators.pattern('^[A-Za-z0-9_.]{4,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$')]),
-          addressCustomer: new FormControl('', Validators.required),
+            Validators.pattern('^[a-zA-Z0-9.!#$%&\'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$')]),
+          addressCustomer: new FormControl('',[Validators.required, Validators.maxLength(255), Validators.minLength(5)]),
           idCardCustomer: new FormControl('', [Validators.required,
             Validators.pattern('^(\\d{12})$')]),
           codeCustomer: new FormControl(''),
@@ -111,10 +112,9 @@ export class CustomerCreateComponent implements OnInit {
           dateOfBirth: new FormControl('', this.checkDateOfBirth),
           flagDelete: new FormControl(''),
           approvalCustomer: new FormControl(''),
-          phoneCustomer1: new FormControl('', [Validators.required,
-            Validators.pattern('^([+84][0-9]{10})$')]),
+          phoneCustomer1: new FormControl('', [Validators.required, Validators.pattern('[0][9][0]\\d{7}')]),
           phoneCustomer2: new FormControl('', [
-            Validators.pattern('^([+84][0-9]{10})$')]),
+            Validators.pattern('[0][9][0]\\d{7}')]),
           usernameAccount: new FormControl('', [Validators.required,
             Validators.pattern('[a-zA-Z0-9' +
               ' _ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪ' +
@@ -187,7 +187,7 @@ export class CustomerCreateComponent implements OnInit {
     let result = null;
     // @ts-ignore
     this.listMailCustomerAndUsernameAccount.forEach(value => {
-      if (phoneNumber === Number(value.phoneCustomerMd)) {
+      if (phoneNumber === value.phoneCustomerMd) {
         result = {checkPhoneNumber: true};
       }
     });
@@ -195,5 +195,8 @@ export class CustomerCreateComponent implements OnInit {
   }
 
 
+  resetFormAndData(): void {
+    this.ngOnInit();
+  }
 
 }
